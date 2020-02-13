@@ -1,0 +1,20 @@
+{
+  "name": "techdegree-project-8",
+  "version": "1.0.0",
+  "description": "A simple web application that mirrors library services using Node.js, Express, Pug, and the SQL ORM Sequelize.",
+  "main": "index.js",
+  "scripts": {
+    "start": "npm app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/LuCAN7/techdegree-project-8.git"
+  },
+  "author": "Lucan Fraser",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/LuCAN7/techdegree-project-8/issues"
+  },
+  "homepage": "https://github.com/LuCAN7/techdegree-project-8#readme"
+}
