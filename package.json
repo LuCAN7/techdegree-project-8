@@ -16,5 +16,11 @@
   "bugs": {
     "url": "https://github.com/LuCAN7/techdegree-project-8/issues"
   },
-  "homepage": "https://github.com/LuCAN7/techdegree-project-8#readme"
+  "homepage": "https://github.com/LuCAN7/techdegree-project-8#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "pug": "^2.0.4",
+    "sequelize": "^5.21.4",
+    "sqlite3": "^4.1.1"
+  }
 }
