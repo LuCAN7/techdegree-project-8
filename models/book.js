@@ -44,7 +44,7 @@ module.exports = (sequelize) => {
       }
     },
     year: {
-      type: Sequelize.DATEONLY,
+      type: Sequelize.INTEGER,
       allowNull: false,
       validate: {
         notNull: {

@@ -4,7 +4,7 @@
   "description": "A simple web application that mirrors library services using Node.js, Express, Pug, and the SQL ORM Sequelize.",
   "main": "index.js",
   "scripts": {
-    "start": "npm app.js",
+    "start": "node ./bin/www",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,7 +18,10 @@
   },
   "homepage": "https://github.com/LuCAN7/techdegree-project-8#readme",
   "dependencies": {
+    "cookie-parser": "^1.4.4",
     "express": "^4.17.1",
+    "http-errors": "^1.7.3",
+    "morgan": "^1.9.1",
     "pug": "^2.0.4",
     "sequelize": "^5.21.4",
     "sqlite3": "^4.1.1"
