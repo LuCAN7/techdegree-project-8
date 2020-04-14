@@ -33,6 +33,17 @@ router.post('/', asyncHandler( async (req, res, next) => {
   res.redirect('/');
 }));
 
+
+/* GET individual book */
+router.get('/:id', asyncHandler( async (req, res, next) => {
+  const book = await Book.findByPk(req.params.id);
+  res.render('books/book_detail', { book: book, title: book.title});
+
+}));
+
+
+
+
 // Set up your server, middleware and routes
   // At the very least, you will need the following routes:
     // get / - Home route should redirect to the /books route. X
@@ -41,7 +52,7 @@ router.post('/', asyncHandler( async (req, res, next) => {
 
     // get /books/new - Shows the create new book form. X
 
-    // post /books/new - Posts a new book to the database.
+    // post /books/new - Posts a new book to the database. X - REDIRECT TO HOME??
 
     // get /books/:id - Shows book detail form.
 
