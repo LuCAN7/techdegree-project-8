@@ -12,6 +12,7 @@ function asyncHandler(cb) {
     }
   }
 }
+
 /* GET a list of books */
 router.get('/', asyncHandler( async(req, res, next) => {
   const books = await Book.findAll({order: [["year", "DESC"]]});
@@ -19,18 +20,26 @@ router.get('/', asyncHandler( async(req, res, next) => {
 }));
 
 
-/* Create a new article form. */
-router.get('/new_book',  (req, res) => {
-  res.render("books/new_book", { books: {}, title: "New Book" });
-});
+/* Create a new book form. */
+router.get('/new_book', asyncHandler( async (req, res) => {
+   res.render("books/new_book", { books: {}, title: "New Book" });
+}));
+
+
+/* POST create a book */ 
+router.post('/', asyncHandler( async (req, res, next) => {
+  const book = await Book.create(req.body);
+  // console.log(req.body);
+  res.redirect('/');
+}));
 
 // Set up your server, middleware and routes
   // At the very least, you will need the following routes:
-    // get / - Home route should redirect to the /books route.
+    // get / - Home route should redirect to the /books route. X
 
-    // get /books - Shows the full list of books.
+    // get /books - Shows the full list of books. X
 
-    // get /books/new - Shows the create new book form.
+    // get /books/new - Shows the create new book form. X
 
     // post /books/new - Posts a new book to the database.
 
