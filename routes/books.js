@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Book = require('../models').Book;
 
-// Hnadler function to wrap routes and avoid repetition
+// Handler function to wrap routes and avoid repetition
 function asyncHandler(cb) {
   return async(req, res, next) => {
     try {
@@ -24,24 +24,16 @@ router.get('/new_book', asyncHandler( async (req, res) => {
    res.render("books/new_book", { books: {}, title: "New Book" });
 }));
 
-/* POST create a book */ 
+/* CREATE a book */ 
 router.post('/', asyncHandler( async (req, res) => {
   const book = await Book.create(req.body);
-  // console.log(req.body);
-  // concatnated the book.id ** copied teachers notes **
   res.redirect('/');
 }));
 
-// /* Edit book details */
-// router.get('/:id', asyncHandler( async (req, res) => {
-//   const book = await Book.findByPk(req.params.id);
-//   req.render('books/book_detail', {book: book, title: 'EDIT'})
-// }))
-
-/* GET Edit individual book */
+/* READ individual book */
 router.get('/:id', asyncHandler( async (req, res) => {
   const book = await Book.findByPk(req.params.id);
-  res.render('books/book_detail', { book: book, title: 'EDIT'});
+  res.render('books/book_detail', { book: book});
 }));
 
 /* UPDATE a book */
@@ -49,44 +41,27 @@ router.post('/:id', asyncHandler( async (req, res) => {
   const book = await Book.findByPk(req.params.id);
   await book.update(req.body);
   res.redirect('/');
-  // res.render('books/book_detail', {book: book, title: 'UPDATE'});
 }));
 
 /* DELETE a book */
-// method='post' action='/books/:id/delete'
 router.post('/:id/delete', asyncHandler( async (req, res) =>{
   const book = await Book.findByPk(req.params.id);
   await book.destroy();
   res.redirect('/');
 }))
 
-// app.use();
-// C R U D - post, get, put, delete
-// POST – Create
-// GET – Read/Retrieve
-// PUT/PATCH – Update
-// DELETE – Delete
 
+/* 
 
-// Set up your server, middleware and routes
-  // At the very least, you will need the following routes:
-    // X get / - Home route should redirect to the /books route. X
+- Set up a custom error handler middleware function that logs the error to the console and r
+enders an “Error” view with a friendly message for the user. 
+This is useful if the server encounters an error, like trying to view the “Books Detail” page for a book :id 
+that doesn’t exist. See the error.html file in the example-markup folder to see what this would look like.
 
-    // X get /books - Shows the full list of books. X
+- Set up a middleware function that returns a 404 NOT FOUND HTTP status code and renders a "Page Not Found" 
+view when the user navigates to a non-existent route, such as /error. See the page_found.html file in the 
+example markup folder for an example of what this would look like. 
 
-    // X get /books/new - Shows the create new book form. X
-
-    // X post /books/new - Posts a new book to the database. X - REDIRECT TO HOME??
-
-    // X get /books/:id - Shows book detail form. X
-
-    // X post /books/:id - Updates book info in the database.
-
-    // post /books/:id/delete - Deletes a book. 
-
-    
-        /*Careful, this can’t be undone. 
-        It can be helpful to create a new “test” book to test deleting.*/
-
-
+*/
+ 
 module.exports = router;
