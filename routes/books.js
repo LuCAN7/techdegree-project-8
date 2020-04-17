@@ -26,8 +26,20 @@ router.get('/new_book', asyncHandler( async (req, res) => {
 
 /* CREATE a book */ 
 router.post('/', asyncHandler( async (req, res) => {
-  const book = await Book.create(req.body);
-  res.redirect('/');
+  let book;
+  try {
+    book = await Book.create(req.body);
+    res.redirect('/');
+  } catch(error) {
+    if(error.name === "SequelizeValidationError") { // checking the error
+      book = await Book.build(req.body);
+      res.render('books/form_error', { book: book, errors: error.errors });
+    } else {
+      throw error; // error caught in the asyncHandler's catch block
+    }
+
+  }
+  
 }));
 
 /* READ individual book */
@@ -44,14 +56,24 @@ router.get('/:id', asyncHandler( async (req, res) => {
 
 /* UPDATE a book */
 router.post('/:id', asyncHandler( async (req, res) => {
-  const book = await Book.findByPk(req.params.id);
-
-  if(book) {
-    await book.update(req.body);
-    res.redirect('/');
-  }else{
-    res.sendStatus(404);
-  }
+  let book;
+  try {
+    book = await Book.findByPk(req.params.id);
+    if(book) {
+      await book.update(req.body);
+      res.redirect('/');
+    } else {
+      res.sendStatus(404);
+    }
+  } catch(error) {
+    if(error.name === 'SequelizeValidationError') {
+      book = await Book.build(req.body);
+      book.id = req.params.id; // make sure correct article gets updated
+      res.render('books/form_error', {book: book, errors: error.errors})
+    } else {
+      throw error;
+    }
+  } 
   
 }));
 
@@ -70,6 +92,8 @@ router.post('/:id/delete', asyncHandler( async (req, res) =>{
 
 
 /* 
+
+** PLEASE READ THE REQUIREMENTS AND CHECK THE...CREATE & UPDATE routes **
 
 - Set up a custom error handler middleware function that logs the error to the console and r
 enders an “Error” view with a friendly message for the user. 
