@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Book = require('../models').Book;
 
-// Handler function to wrap routes and avoid repetition
+// Handler function to wrap each route and avoid repetition
 function asyncHandler(cb) {
   return async(req, res, next) => {
     try {
@@ -33,21 +33,39 @@ router.post('/', asyncHandler( async (req, res) => {
 /* READ individual book */
 router.get('/:id', asyncHandler( async (req, res) => {
   const book = await Book.findByPk(req.params.id);
-  res.render('books/book_detail', { book: book});
+  // Validate if a book is in the database
+  if(book) {
+    res.render('books/book_detail', { book: book});
+  } else {
+    res.sendStatus(404);
+  }
+
 }));
 
 /* UPDATE a book */
 router.post('/:id', asyncHandler( async (req, res) => {
   const book = await Book.findByPk(req.params.id);
-  await book.update(req.body);
-  res.redirect('/');
+
+  if(book) {
+    await book.update(req.body);
+    res.redirect('/');
+  }else{
+    res.sendStatus(404);
+  }
+  
 }));
 
 /* DELETE a book */
 router.post('/:id/delete', asyncHandler( async (req, res) =>{
   const book = await Book.findByPk(req.params.id);
-  await book.destroy();
-  res.redirect('/');
+  
+  if(book) {
+    await book.destroy();
+    res.redirect('/');
+  } else {
+    res.sendStatus(404);
+  }
+  
 }))
 
 
