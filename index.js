@@ -21,3 +21,18 @@
 
 // module.exports = db;
 
+
+// PROMISES
+// function getUsers() {
+
+//   return new Promise( (resolve, reject)=> {
+//       ...if(err) reject
+//       ...else doSomething...
+//         return resolve
+//   })
+// };
+
+// app.get('/', ( req, res, next ) => {
+//   getUsers().then().then.catch()
+
+// });

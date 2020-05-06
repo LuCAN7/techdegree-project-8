@@ -24,7 +24,10 @@ app.use('/books', books); //
 
 // catch 404 and forward to error handler
 app.use( (req, res, next) => {
+  res.status(404);
+  // res.render('books/page_not_found');
   next(createError(404));
+  // console.log('1.PASSING DATA THROUGH...this app.use()');
 });
 
 // error handler
@@ -33,9 +36,18 @@ app.use( (err, req, res, next) => {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
+  // console.log('2.PASSING DATA THROUGH...2nd app.use()', err);
+
   // render the error page
   res.status(err.status || 500);
-  res.render('error');
+  // if(res.status === 404){
+    // console.log('Error 404');
+    res.render('books/page_not_found');
+  // } 
+  // else if ( res.status === 500){
+  //   console.log('Error 500');
+  //   res.render('books/error');
+  // }
 });
 
 module.exports = app;

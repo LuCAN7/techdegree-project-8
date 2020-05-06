@@ -8,7 +8,10 @@ function asyncHandler(cb) {
     try {
       await cb(req, res, next)
     } catch(error) {
-      res.status(500).send(error);
+      // console.log('SOMETHING WENT WRONG ON THE SERVER...');
+      // console.log('Error Status:', res.status);
+      res.status(500);
+      // res.render(error);
     }
   }
 }
@@ -25,7 +28,7 @@ router.get('/new_book', asyncHandler( async (req, res) => {
 }));
 
 /* CREATE a book */ 
-router.post('/', asyncHandler( async (req, res) => {
+router.post('/new_book', asyncHandler( async (req, res) => {
   let book;
   try {
     book = await Book.create(req.body);
@@ -33,24 +36,41 @@ router.post('/', asyncHandler( async (req, res) => {
   } catch(error) {
     if(error.name === "SequelizeValidationError") { // checking the error
       book = await Book.build(req.body);
+      res.status(500);
       res.render('books/form_error', { book: book, errors: error.errors });
     } else {
-      throw error; // error caught in the asyncHandler's catch block
+      res.status(404);
+      next(error);
     }
-
   }
   
 }));
 
 /* READ individual book */
 router.get('/:id', asyncHandler( async (req, res) => {
-  const book = await Book.findByPk(req.params.id);
-  // Validate if a book is in the database
-  if(book) {
-    res.render('books/book_detail', { book: book});
-  } else {
-    res.sendStatus(404);
+  let book;
+  try {
+    book = await Book.findByPk(req.params.id);
+    // Validate if a book is in the database
+    if(book) {
+      res.render('books/book_detail', { book: book});
+    } else {
+      res.status(404);
+      res.render('books/error');
+    
+    }
+  } catch (error) {
+  //   console.log('Sorry this ID cannot be found! - GET')
+    res.status(500);
+    res.render('books/error');
   }
+          
+          // Validate if a book is in the database
+          // if(book) {
+            
+          // } else {
+            
+          // }
 
 }));
 
@@ -63,16 +83,23 @@ router.post('/:id', asyncHandler( async (req, res) => {
       await book.update(req.body);
       res.redirect('/');
     } else {
-      res.sendStatus(404);
+      console.log('Sorry this ID cannot be found! - POST')
+      res.status(404);
+      // res.render('books/error');
+      // res.render('books/error');
     }
-  } catch(error) {
+  } catch (error) {
+    // console.log("GETTING THERE????");
+    // throw Error;
     if(error.name === 'SequelizeValidationError') {
       book = await Book.build(req.body);
       book.id = req.params.id; // make sure correct article gets updated
       res.render('books/form_error', {book: book, errors: error.errors})
-    } else {
-      throw error;
-    }
+    } 
+    
+    // else {
+    //   throw error; // error caught in the asyncHandler's catch block
+    // }
   } 
   
 }));
@@ -90,15 +117,19 @@ router.post('/:id/delete', asyncHandler( async (req, res) =>{
   
 }))
 
+// 500 - (error) unexpected error on the server. for bad 
+// 404 - (page not found) for bad route
 
 /* 
 
 ** PLEASE READ THE REQUIREMENTS AND CHECK THE...CREATE & UPDATE routes **
 
-- Set up a custom error handler middleware function that logs the error to the console and r
-enders an “Error” view with a friendly message for the user. 
-This is useful if the server encounters an error, like trying to view the “Books Detail” page for a book :id 
-that doesn’t exist. See the error.html file in the example-markup folder to see what this would look like.
+- GET stylesheets to load
+
+- Set up a custom error handler middleware function that logs the error to the console and renders 
+an “Error” view with a friendly message for the user. This is useful if the server encounters an error, 
+like trying to view the “Books Detail” page for a book :id that doesn’t exist. 
+See the error.html file in the example-markup folder to see what this would look like.
 
 - Set up a middleware function that returns a 404 NOT FOUND HTTP status code and renders a "Page Not Found" 
 view when the user navigates to a non-existent route, such as /error. See the page_found.html file in the 
