@@ -8,10 +8,10 @@ function asyncHandler(cb) {
     try {
       await cb(req, res, next)
     } catch(error) {
-      // console.log('SOMETHING WENT WRONG ON THE SERVER...');
-      // console.log('Error Status:', res.status);
+      
       res.status(500);
-      // res.render(error);
+      res.render('books/error');
+    
     }
   }
 }
@@ -34,13 +34,11 @@ router.post('/new_book', asyncHandler( async (req, res) => {
     book = await Book.create(req.body);
     res.redirect('/');
   } catch(error) {
-    if(error.name === "SequelizeValidationError") { // checking the error
+    if(error.name === "SequelizeValidationError") { // checking the error type
       book = await Book.build(req.body);
-      res.status(500);
       res.render('books/form_error', { book: book, errors: error.errors });
     } else {
-      res.status(404);
-      next(error);
+      throw error; // error caught in the asyncHandler's catch block
     }
   }
   
@@ -49,28 +47,16 @@ router.post('/new_book', asyncHandler( async (req, res) => {
 /* READ individual book */
 router.get('/:id', asyncHandler( async (req, res) => {
   let book;
-  try {
+ 
     book = await Book.findByPk(req.params.id);
     // Validate if a book is in the database
     if(book) {
       res.render('books/book_detail', { book: book});
     } else {
       res.status(404);
-      res.render('books/error');
+      res.render('books/page_not_found');
     
     }
-  } catch (error) {
-  //   console.log('Sorry this ID cannot be found! - GET')
-    res.status(500);
-    res.render('books/error');
-  }
-          
-          // Validate if a book is in the database
-          // if(book) {
-            
-          // } else {
-            
-          // }
 
 }));
 
@@ -83,23 +69,17 @@ router.post('/:id', asyncHandler( async (req, res) => {
       await book.update(req.body);
       res.redirect('/');
     } else {
-      console.log('Sorry this ID cannot be found! - POST')
-      res.status(404);
-      // res.render('books/error');
-      // res.render('books/error');
+      res.sendStatus(404);
+      res.render('books/page_not_found');
     }
   } catch (error) {
-    // console.log("GETTING THERE????");
-    // throw Error;
     if(error.name === 'SequelizeValidationError') {
       book = await Book.build(req.body);
       book.id = req.params.id; // make sure correct article gets updated
       res.render('books/form_error', {book: book, errors: error.errors})
-    } 
-    
-    // else {
-    //   throw error; // error caught in the asyncHandler's catch block
-    // }
+    } else {
+      throw error; // error caught in the asyncHandler's catch block
+    }
   } 
   
 }));
@@ -107,18 +87,19 @@ router.post('/:id', asyncHandler( async (req, res) => {
 /* DELETE a book */
 router.post('/:id/delete', asyncHandler( async (req, res) =>{
   const book = await Book.findByPk(req.params.id);
-  
+  // const bookID = req.params.id;
   if(book) {
     await book.destroy();
     res.redirect('/');
   } else {
-    res.sendStatus(404);
+    res.sendStatus(400);
+    // throw next(createError(400, `Bad Request. The book ID - ${bookID} does not exist`));
   }
   
 }))
 
 // 500 - (error) unexpected error on the server. for bad 
-// 404 - (page not found) for bad route
+// 404 - (page_not_found) for bad route
 
 /* 
 
