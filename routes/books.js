@@ -6,9 +6,8 @@ const Book = require('../models').Book;
 function asyncHandler(cb) {
   return async(req, res, next) => {
     try {
-      await cb(req, res, next)
+      await cb(req, res, next);
     } catch(error) {
-      
       res.status(500);
       res.render('books/error');
     
@@ -55,7 +54,6 @@ router.get('/:id', asyncHandler( async (req, res) => {
     } else {
       res.status(404);
       res.render('books/page_not_found');
-    
     }
 
 }));
@@ -87,35 +85,14 @@ router.post('/:id', asyncHandler( async (req, res) => {
 /* DELETE a book */
 router.post('/:id/delete', asyncHandler( async (req, res) =>{
   const book = await Book.findByPk(req.params.id);
-  // const bookID = req.params.id;
   if(book) {
     await book.destroy();
     res.redirect('/');
   } else {
     res.sendStatus(400);
-    // throw next(createError(400, `Bad Request. The book ID - ${bookID} does not exist`));
   }
   
 }))
 
-// 500 - (error) unexpected error on the server. for bad 
-// 404 - (page_not_found) for bad route
-
-/* 
-
-** PLEASE READ THE REQUIREMENTS AND CHECK THE...CREATE & UPDATE routes **
-
-- GET stylesheets to load
-
-- Set up a custom error handler middleware function that logs the error to the console and renders 
-an “Error” view with a friendly message for the user. This is useful if the server encounters an error, 
-like trying to view the “Books Detail” page for a book :id that doesn’t exist. 
-See the error.html file in the example-markup folder to see what this would look like.
-
-- Set up a middleware function that returns a 404 NOT FOUND HTTP status code and renders a "Page Not Found" 
-view when the user navigates to a non-existent route, such as /error. See the page_found.html file in the 
-example markup folder for an example of what this would look like. 
-
-*/
  
 module.exports = router;

@@ -25,7 +25,7 @@ app.use('/books', books); //
 // catch 404 and forward to error handler
 app.use( (req, res, next) => {
   // res.sendStatus(404);
-  // console.log('1.PASSING DATA THROUGH...this app.use()');
+  
   next(createError(404));
   // res.render('books/page_not_found');
 });
@@ -35,8 +35,6 @@ app.use( (err, req, res, next) => {
   // set locals, only providing error in development
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
-
-  // console.log('2.PASSING DATA THROUGH...2nd app.use()', err);
 
   // render the error page
   if(err.status === 404){
