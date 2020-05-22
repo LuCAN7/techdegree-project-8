@@ -4,7 +4,7 @@
   "description": "A simple web application that mirrors library services using Node.js, Express, Pug, and the SQL ORM Sequelize.",
   "main": "index.js",
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "node ./bin/www"
   },
   "repository": {
     "type": "git",
