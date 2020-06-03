@@ -34,13 +34,28 @@ app.use( (err, req, res, next) => {
   res.locals.message = err.message;
   res.locals.error = req.app.get('env') === 'development' ? err : {};
 
+  // if(err.status === 404){
+  //   console.log('404');
+  //   res.render('books/page-not-found');
+  // }
+  // else if(err.status === 500){
+  //   console.log('500');
+  //   res.render('books/error');
+  // }
+
+    // res.status(err.status || 500);
+    // res.render('books/error');
+
+
+
   // render the error page
   if(err.status === 404){
     
     res.status(404);
-    res.render('books/page_not_found');
+    res.render('books/page-not-found');
   } else {
     res.status(err.status || 500);
+    res.render('books/error');
   }
 });
 
