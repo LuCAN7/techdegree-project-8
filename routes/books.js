@@ -53,7 +53,7 @@ router.get('/:id', asyncHandler( async (req, res) => {
     if(book) {
       res.render('books/update-book', { book: book});
     } else {
-      res.status(404);
+      res.status(500);
       res.render('books/error');
     }
 
@@ -68,8 +68,8 @@ router.post('/:id', asyncHandler( async (req, res) => {
       await book.update(req.body);
       res.redirect('/');
     } else {
-      res.status(404);
-      res.render('books/page-not-found');
+      res.status(500);
+      res.render('books/error');
     }
   } catch (error) {
     if(error.name === 'SequelizeValidationError') {
